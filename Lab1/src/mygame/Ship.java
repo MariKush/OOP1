@@ -21,7 +21,10 @@ import com.jme3.texture.Texture;
  */
 public class Ship {
     
+    final String MATERIAL1 = "Common/MatDefs/Misc/Unshaded.j3md"; 
+    final String TEXTUREKEY1 = "Textures/Terrain/Rock/Rock.PNG";
     
+        
     private RigidBodyControl shipPhy;
     
     private Geometry shipGeo;
@@ -36,8 +39,8 @@ public class Ship {
         
         /** Create a cannon ball geometry and attach to scene graph. */
         shipGeo = new Geometry("cannon ball", Game.sphere);
-        Material stoneMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        TextureKey key2 = new TextureKey("Textures/Terrain/Rock/Rock.PNG");
+        Material stoneMat = new Material(assetManager, MATERIAL1);
+        TextureKey key2 = new TextureKey(TEXTUREKEY1);
         key2.setGenerateMips(true);
         Texture tex2 = assetManager.loadTexture(key2);
         stoneMat.setTexture("ColorMap", tex2);

@@ -23,6 +23,9 @@ import static mygame.Game.sphere;
  * @author Dell-admin
  */
 public class Torpedo {
+        
+    final String MATERIAL1 = "Common/MatDefs/Misc/Unshaded.j3md"; 
+    final String TEXTUREKEY1 = "Textures/Terrain/Rock/Rock.PNG";
     
     private RigidBodyControl torpedoPhy;
     
@@ -39,8 +42,8 @@ public class Torpedo {
         
         /** Create a cannon ball geometry and attach to scene graph. */
         torpedoGeo = new Geometry("cannon ball", sphere);
-        Material stone_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        TextureKey key2 = new TextureKey("Textures/Terrain/Rock/Rock.PNG");
+        Material stone_mat = new Material(assetManager, MATERIAL1);
+        TextureKey key2 = new TextureKey(TEXTUREKEY1);
         key2.setGenerateMips(true);
         Texture tex2 = assetManager.loadTexture(key2);
         stone_mat.setTexture("ColorMap", tex2);
