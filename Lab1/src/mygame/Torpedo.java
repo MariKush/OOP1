@@ -17,7 +17,6 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
 import static mygame.Game.sphere;
-import static mygame.Game.torpedoGeo;
 
 /**
  *
@@ -25,8 +24,14 @@ import static mygame.Game.torpedoGeo;
  */
 public class Torpedo {
     
-    static protected void createTorpedo(AssetManager assetManager, Node rootNode,
-        BulletAppState bulletAppState, Camera cam){
+    private RigidBodyControl torpedoPhy;
+    
+    private Geometry torpedoGeo;
+    
+
+    
+    Torpedo(AssetManager assetManager, Node rootNode,
+        BulletAppState bulletAppState, Camera cam) {
         
         /** Initialize the cannon ball geometry */
         sphere = new Sphere(52, 52, 0.4f, true, false);
@@ -40,7 +45,6 @@ public class Torpedo {
         Texture tex2 = assetManager.loadTexture(key2);
         stone_mat.setTexture("ColorMap", tex2);
         
-        
         torpedoGeo.setMaterial(stone_mat);
         rootNode.attachChild(torpedoGeo); 
         
@@ -48,15 +52,31 @@ public class Torpedo {
         torpedoGeo.setLocalTranslation(cam.getLocation());
         
         /** Make the ball physcial with a mass > 0.0f */
-        Game.torpedoPhy = new RigidBodyControl(1f);
+        torpedoPhy = new RigidBodyControl(1f);
         
                 
         /** Add physical ball to physics space. */
-        torpedoGeo.addControl(Game.torpedoPhy);
-        bulletAppState.getPhysicsSpace().add(Game.torpedoPhy);
-        Game.torpedoPhy.setGravity(new Vector3f(0,0,0));
+        torpedoGeo.addControl(torpedoPhy);
+        bulletAppState.getPhysicsSpace().add(torpedoPhy);
+        torpedoPhy.setGravity(new Vector3f(0,0,0));
+    
+    
+    };
+    
+    
+    public Vector3f getLocation(){
         
+        return torpedoPhy.getPhysicsLocation();
         
     }
+    
+  
+   public void changeDirection(Vector3f shipV){
+       torpedoPhy.setLinearVelocity(Physics.following(shipV, torpedoPhy.getPhysicsLocation()));
+   }
    
+   public void delete(){
+       torpedoGeo.removeFromParent();
+   }
+    
 }

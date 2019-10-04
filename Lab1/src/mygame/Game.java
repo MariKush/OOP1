@@ -2,12 +2,10 @@ package mygame;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 
 /**
@@ -17,12 +15,10 @@ import com.jme3.scene.shape.Sphere;
  */
 
 public class Game extends SimpleApplication {
+    private Torpedo torpedo;
+    private Ship ship;
 
-    public static RigidBodyControl torpedoPhy;
-    public static RigidBodyControl ballPhy;
     
-    public static Geometry shipGeo;
-    public static Geometry torpedoGeo;
    
     public static Sphere sphere;
     
@@ -40,7 +36,7 @@ public class Game extends SimpleApplication {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         
-        Ship.createShip(assetManager, rootNode, bulletAppState);
+        ship=new Ship(assetManager, rootNode, bulletAppState);
         
         flyCam.setMoveSpeed(25);
         
@@ -57,20 +53,20 @@ public class Game extends SimpleApplication {
         public void onAction(String name, boolean keyPressed, float tpf) {
             if(!wasShoot)
                 if (name.equals("Shoot") && !keyPressed) {
-                    Torpedo.createTorpedo(assetManager, rootNode, bulletAppState, cam);
+                    torpedo=new Torpedo(assetManager, rootNode, bulletAppState, cam);
                     wasShoot=true;
                 }
         }
     };
     
     
-    static void hitСheck(Vector3f bf, Vector3f tf){
-        
+    void hitСheck(Vector3f bf, Vector3f tf){
+              
+        //make torpedo and ship invisible
         if(bf.subtract(tf).length()<5f){
             wasHit = true;
-            
-            shipGeo.removeFromParent();
-            torpedoGeo.removeFromParent();               
+            ship.delete();
+            torpedo.delete();
         }
     }
         
@@ -81,9 +77,9 @@ public class Game extends SimpleApplication {
         if(!wasShoot)return;
         if (wasHit) return;
          
-        torpedoPhy.setLinearVelocity(Physics.following(ballPhy.getPhysicsLocation(), torpedoPhy.getPhysicsLocation()));
+        torpedo.changeDirection(ship.getLocation());//todo
         
-       hitСheck(ballPhy.getPhysicsLocation(), torpedoPhy.getPhysicsLocation());
+        hitСheck(ship.getLocation(), torpedo.getLocation());
           
     }
     

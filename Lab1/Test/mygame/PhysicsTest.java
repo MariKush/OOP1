@@ -44,7 +44,6 @@ public class PhysicsTest {
      */
     @Test
     public void testFollowing() {
-        System.out.println("following");
         Vector3f bf = new Vector3f(10, -5, 9);
         Vector3f tf = new Vector3f(1, 7, -2);
         Vector3f expResult = bf.subtract(tf).normalize().mult(SPEED);

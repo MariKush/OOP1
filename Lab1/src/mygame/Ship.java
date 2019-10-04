@@ -15,15 +15,18 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
-import static mygame.Game.shipGeo;
-
 /**
  *
  * @author Dell-admin
  */
 public class Ship {
     
-    static protected void createShip(AssetManager assetManager, Node rootNode,
+    
+    private RigidBodyControl shipPhy;
+    
+    private Geometry shipGeo;
+    
+    public Ship(AssetManager assetManager, Node rootNode,
         BulletAppState bulletAppState ){
         
         /** Initialize the cannon ball geometry */
@@ -47,16 +50,24 @@ public class Ship {
         shipGeo.setLocalTranslation(new Vector3f(50, -30, -40));
         
         /** Make the ball physcial with a mass > 0.0f */
-        Game.ballPhy = new RigidBodyControl(1f);
+        shipPhy = new RigidBodyControl(1f);
          
         /** Add physical ball to physics space. */
-        shipGeo.addControl(Game.ballPhy);
-        bulletAppState.getPhysicsSpace().add(Game.ballPhy);
-        Game.ballPhy.setGravity(new Vector3f(0,0,0));
+        shipGeo.addControl(shipPhy);
+        bulletAppState.getPhysicsSpace().add(shipPhy);
+        shipPhy.setGravity(new Vector3f(0,0,0));
         
         /** Accelerate the physcial ball to shoot it. */
-        Game.ballPhy.setLinearVelocity(new Vector3f(-7, -3, 5));
+        shipPhy.setLinearVelocity(new Vector3f(-7, -3, 5));
         
+    }
+    
+    public Vector3f getLocation(){
+        return shipPhy.getPhysicsLocation();
+    }
+    
+    public void delete(){
+        shipGeo.removeFromParent();
     }
     
 }
