@@ -25,6 +25,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
+import com.jme3.scene.shape.Sphere;
+import com.jme3.scene.shape.Sphere.TextureMode;
+import com.jme3.texture.Texture;
 
 /**
  *
@@ -42,6 +45,7 @@ public class ShipTest {
     private Ship s;
     
     public ShipTest() {
+        
     }
     
     @BeforeClass
@@ -63,6 +67,25 @@ public class ShipTest {
     public void tearDown() {
     }
 
+    @Test
+    public void createBall() {
+        s=new Ship();
+        s.createBall(assetManager, false);
+        assertNotEquals(s.getGeometry(), null);//Object is created
+        assertEquals(new Vector3f(50, -30, -40), s.getGeometry().getLocalTranslation());//position is right
+    }
+    
+    @Test
+    public void createPhysic() {
+        s=new Ship();
+        s.createBall(assetManager, false);
+        s.createPhysic(bulletAppState, false);
+        
+        assertNotEquals(null, s.getPhysics());
+        assertNotEquals(s.getGeometry(), null);
+        assertEquals(new Vector3f(50, -30, -40), s.getGeometry().getLocalTranslation());
+        
+    }
       
     
 }

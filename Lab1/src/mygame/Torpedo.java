@@ -16,7 +16,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
-import static mygame.Game.sphere;
 
 /**
  *
@@ -27,20 +26,23 @@ public class Torpedo {
     final String MATERIAL1 = "Common/MatDefs/Misc/Unshaded.j3md"; 
     final String TEXTUREKEY1 = "Textures/Terrain/Rock/Rock.PNG";
     
+    public static Sphere sphere;
+   
     private RigidBodyControl torpedoPhy;
     
     private Geometry torpedoGeo;
     
 
+    public void initBall(){
+    }
     
-    Torpedo(AssetManager assetManager, Node rootNode,
-        BulletAppState bulletAppState, Camera cam) {
+    public void createBall(AssetManager assetManager, Camera cam){
         
         /** Initialize the cannon ball geometry */
         sphere = new Sphere(52, 52, 0.4f, true, false);
         sphere.setTextureMode(Sphere.TextureMode.Projected);
         
-        /** Create a cannon ball geometry and attach to scene graph. */
+        /* Create a cannon ball geometry and attach to scene graph. */
         torpedoGeo = new Geometry("cannon ball", sphere);
         Material stone_mat = new Material(assetManager, MATERIAL1);
         TextureKey key2 = new TextureKey(TEXTUREKEY1);
@@ -49,11 +51,17 @@ public class Torpedo {
         stone_mat.setTexture("ColorMap", tex2);
         
         torpedoGeo.setMaterial(stone_mat);
-        rootNode.attachChild(torpedoGeo); 
+        
         
         /** Position the cannon ball  */
         torpedoGeo.setLocalTranslation(cam.getLocation());
-        
+    }
+    
+    public Geometry getGeometry(){
+        return torpedoGeo;
+    }
+    
+    public void createPhysic(BulletAppState bulletAppState){
         /** Make the ball physcial with a mass > 0.0f */
         torpedoPhy = new RigidBodyControl(1f);
         
@@ -62,8 +70,11 @@ public class Torpedo {
         torpedoGeo.addControl(torpedoPhy);
         bulletAppState.getPhysicsSpace().add(torpedoPhy);
         torpedoPhy.setGravity(new Vector3f(0,0,0));
+    }
     
     
+    Torpedo() {
+         
     };
     
     

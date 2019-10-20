@@ -20,7 +20,7 @@ public class Game extends SimpleApplication {
 
     
    
-    public static Sphere sphere;
+    
     
     /** Prepare the Physics Application State (jBullet) */
     private BulletAppState bulletAppState;
@@ -36,8 +36,13 @@ public class Game extends SimpleApplication {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         
-        ship=new Ship(assetManager, rootNode, bulletAppState);
+        ship=new Ship();
         
+        ship.createBall(assetManager, true);
+        ship.createPhysic(bulletAppState, true);
+        
+        rootNode.attachChild(ship.getGeometry());
+
         flyCam.setMoveSpeed(25);
         
         // You can map one or several inputs to one named action
@@ -53,7 +58,10 @@ public class Game extends SimpleApplication {
         public void onAction(String name, boolean keyPressed, float tpf) {
             if(!wasShoot)
                 if (name.equals("Shoot") && !keyPressed) {
-                    torpedo=new Torpedo(assetManager, rootNode, bulletAppState, cam);
+                    torpedo=new Torpedo();
+                    torpedo.createBall(assetManager, cam);
+                    torpedo.createPhysic(bulletAppState);
+                    rootNode.attachChild(torpedo.getGeometry());
                     wasShoot=true;
                 }
         }
