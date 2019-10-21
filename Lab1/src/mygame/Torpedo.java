@@ -13,9 +13,11 @@ import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
+import com.jme3.bullet.PhysicsSpace;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
+import com.jme3.system.NativeLibraryLoader;
 
 /**
  *
@@ -26,17 +28,18 @@ public class Torpedo {
     final String MATERIAL1 = "Common/MatDefs/Misc/Unshaded.j3md"; 
     final String TEXTUREKEY1 = "Textures/Terrain/Rock/Rock.PNG";
     
-    public static Sphere sphere;
-   
+    public static Sphere sphere;  
     private RigidBodyControl torpedoPhy;
     
     private Geometry torpedoGeo;
     
+    Torpedo() {
+         
+    };
 
-    public void initBall(){
-    }
-    
-    public void createBall(AssetManager assetManager, Camera cam){
+ 
+    public void createBall(AssetManager assetManager, Vector3f camLocation, boolean flag){
+
         
         /** Initialize the cannon ball geometry */
         sphere = new Sphere(52, 52, 0.4f, true, false);
@@ -44,38 +47,49 @@ public class Torpedo {
         
         /* Create a cannon ball geometry and attach to scene graph. */
         torpedoGeo = new Geometry("cannon ball", sphere);
-        Material stone_mat = new Material(assetManager, MATERIAL1);
+        Material stoneMat;
+        if (flag) 
+            stoneMat = new Material(assetManager, MATERIAL1);
+        else
+            stoneMat = assetManager.loadMaterial(MATERIAL1);
         TextureKey key2 = new TextureKey(TEXTUREKEY1);
         key2.setGenerateMips(true);
-        Texture tex2 = assetManager.loadTexture(key2);
-        stone_mat.setTexture("ColorMap", tex2);
+         Texture tex2 = assetManager.loadTexture(key2);
+        if (flag)
+            stoneMat.setTexture("ColorMap", tex2);
         
-        torpedoGeo.setMaterial(stone_mat);
+        torpedoGeo.setMaterial(stoneMat);
         
         
         /** Position the cannon ball  */
-        torpedoGeo.setLocalTranslation(cam.getLocation());
+        torpedoGeo.setLocalTranslation(camLocation);
     }
     
     public Geometry getGeometry(){
         return torpedoGeo;
     }
     
-    public void createPhysic(BulletAppState bulletAppState){
+    public RigidBodyControl getPhysics(){
+        return torpedoPhy;
+    }
+    
+    public void createPhysic(BulletAppState bulletAppState, boolean flag){
+        if (NativeLibraryLoader.isUsingNativeBullet()) {
+            NativeLibraryLoader.loadNativeLibrary("bulletjme", true);
+        }
         /** Make the ball physcial with a mass > 0.0f */
         torpedoPhy = new RigidBodyControl(1f);
         
                 
         /** Add physical ball to physics space. */
         torpedoGeo.addControl(torpedoPhy);
-        bulletAppState.getPhysicsSpace().add(torpedoPhy);
+        if (flag)
+            bulletAppState.getPhysicsSpace().add(torpedoPhy);
         torpedoPhy.setGravity(new Vector3f(0,0,0));
     }
     
     
-    Torpedo() {
-         
-    };
+   
     
     
     public Vector3f getLocation(){

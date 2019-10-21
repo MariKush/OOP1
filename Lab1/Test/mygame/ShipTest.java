@@ -17,6 +17,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import com.jme3.scene.shape.Sphere;
+import com.jme3.scene.shape.Sphere.TextureMode;
+import com.jme3.texture.Texture;
+
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import static org.mockito.Matchers.any;
@@ -25,9 +29,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
-import com.jme3.scene.shape.Sphere;
-import com.jme3.scene.shape.Sphere.TextureMode;
-import com.jme3.texture.Texture;
+
 
 /**
  *

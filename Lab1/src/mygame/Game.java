@@ -20,12 +20,10 @@ public class Game extends SimpleApplication {
 
     
    
-    
-    
     /** Prepare the Physics Application State (jBullet) */
     private BulletAppState bulletAppState;
     boolean wasShoot = false;
-    static boolean wasHit = false;
+    boolean wasHit = false;
     
     
     
@@ -59,8 +57,8 @@ public class Game extends SimpleApplication {
             if(!wasShoot)
                 if (name.equals("Shoot") && !keyPressed) {
                     torpedo=new Torpedo();
-                    torpedo.createBall(assetManager, cam);
-                    torpedo.createPhysic(bulletAppState);
+                    torpedo.createBall(assetManager, cam.getLocation(), true);
+                    torpedo.createPhysic(bulletAppState, true);
                     rootNode.attachChild(torpedo.getGeometry());
                     wasShoot=true;
                 }
@@ -68,11 +66,12 @@ public class Game extends SimpleApplication {
     };
     
     
-    void hitСheck(Vector3f bf, Vector3f tf){
+    void hitСheck(Vector3f bf, Vector3f tf, boolean flag){
               
         //make torpedo and ship invisible
         if(bf.subtract(tf).length()<5f){
             wasHit = true;
+            if (!flag) return;
             ship.delete();
             torpedo.delete();
         }
@@ -87,7 +86,7 @@ public class Game extends SimpleApplication {
          
         torpedo.changeDirection(ship.getLocation());//todo
         
-        hitСheck(ship.getLocation(), torpedo.getLocation());
+        hitСheck(ship.getLocation(), torpedo.getLocation(),true);
           
     }
     
